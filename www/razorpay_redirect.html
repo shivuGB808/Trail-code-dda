@@ -1,0 +1,9 @@
+<body onload="document.forms[0].submit()">
+
+<form method="POST" action="{{ data.action }}">
+    {% for k, v in data.fields.items() %}
+        <input type="hidden" name="{{ k }}" value="{{ v }}">
+    {% endfor %}
+</form>
+
+<p>Redirecting to RazorPay... </p>

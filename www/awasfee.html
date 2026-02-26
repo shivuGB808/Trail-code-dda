@@ -1,0 +1,139 @@
+{% extends "templates/web.html" %}
+{% block page_content %}
+
+<style>
+/* ===== PAGE ===== */
+body {
+    background-color: #f4f6f9;
+    font-family: Arial, sans-serif;
+}
+
+/* ===== CARD ===== */
+.doc-card {
+    max-width: 620px;
+    margin: 40px auto;
+    background: #ffffff;
+    border-radius: 14px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+    overflow: hidden;
+}
+
+/* ===== HEADER ===== */
+.doc-header {
+    background: linear-gradient(135deg, #5b8def, #3b6fd8);
+    color: #ffffff;
+    padding: 18px 24px;
+}
+
+.doc-header h4 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+/* ===== BODY ===== */
+.doc-body {
+    padding: 24px;
+}
+
+/* ===== ROW ===== */
+.doc-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.doc-row:last-child {
+    border-bottom: none;
+}
+
+/* ===== TEXT ===== */
+.doc-label {
+    color: #6b7280;
+    font-weight: 500;
+}
+
+.doc-value {
+    font-weight: 600;
+    color: #1f2937;
+}
+
+/* ===== AMOUNT ===== */
+.amount {
+    color: #15803d;
+    background: #ecfdf5;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-weight: 700;
+}
+
+/* ===== BUTTON ===== */
+.pay-btn {
+    display: block;
+    width: 100%;
+    margin-top: 24px;
+    padding: 12px;
+    background: #16a34a;
+    color: #ffffff;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.pay-btn:hover {
+    background: #15803d;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 600px) {
+    .doc-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+    }
+}
+</style>
+
+<div class="doc-card">
+
+    <div class="doc-header">
+        <h4>Application Details</h4>
+    </div>
+
+    <div class="doc-body">
+
+        <div class="doc-row">
+            <div class="doc-label">Application No</div>
+            <div class="doc-value">{{ name.name }}</div>
+        </div>
+
+        <div class="doc-row">
+            <div class="doc-label">Applicant Name</div>
+            <div class="doc-value">{{ name.applicant_name }}</div>
+        </div>
+
+        <div class="doc-row">
+            <div class="doc-label">Date of Birth</div>
+            <div class="doc-value">{{ name.date_of_birth }}</div>
+        </div>
+
+        <div class="doc-row">
+            <div class="doc-label">Gender</div>
+            <div class="doc-value">{{ name.gender }}</div>
+        </div>
+
+        <div class="doc-row">
+            <div class="doc-label">Registration Amount</div>
+            <div class="doc-value amount">₹ {{ name.registration_amount }}</div>
+        </div>
+
+        <button class="pay-btn">Pay Now</button>
+
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Transaction Receipt</title>
+    <style>
+.payment-response {
+    max-width: 500px;
+    margin: 50px auto;
+    padding: 30px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0px 0px 10px rgba(0,0,0,0.05);
+}
+.payment-response h2.success { color: #28a745; }
+.payment-response h2.failed { color: #dc3545; }
+.payment-response .btn {
+    margin-top: 15px;
+}
+</style>
+</head>
+<body>
+<div class="payment-response">
+    <div style="
+    background-color: #f0f8ff;  /* Light blue background */
+    padding: 15px;              /* Space around text */
+    border-radius: 8px;         /* Rounded corners */
+    text-align: center;
+    font-weight: bold;
+    color: #000;
+    margin-bottom: 20px;
+">
+    This is a <strong>Computer Generated E-Acknowledgement</strong> and does not require a physical signature.
+</div>
+    <div style="text-align:center; margin-bottom: 20px;">
+        <img src="/assets/erpnext/images/dda_logo_small.png"
+             alt="DDA Logo"
+             style="max-width:70px; height:auto;">
+    </div>
+    <h2 class="{{ status }}">{{ status | capitalize }} Payment</h2>
+<table style="width: 100%; max-width: 520px; border-collapse: collapse;">
+  <tr>
+    <td style="padding: 6px 0; font-weight: bold; width: 45%; text-align: left;">Gateway</td>
+    <td style="padding: 6px 0; text-align: left;">{{ gateway }}</td>
+  </tr>
+  <tr>
+    <td style="padding: 6px 0; font-weight: bold; text-align: left;">Transaction ID</td>
+    <td style="padding: 6px 0; text-align: left;">{{ transaction_id }}</td>
+  </tr>
+  <tr>
+    <td style="padding: 6px 0; font-weight: bold; text-align: left;">Bank Reference No</td>
+    <td style="padding: 6px 0; text-align: left;">{{ bank_transaction_id }}</td>
+  </tr>
+  <tr>
+    <td style="padding: 6px 0; font-weight: bold; text-align: left;">Transaction Date &amp; Time</td>
+    <td style="padding: 6px 0; text-align: left;">{{ transaction_date_time }}</td>
+  </tr>
+  <tr>
+    <td style="padding: 6px 0; font-weight: bold; text-align: left;">Payment Mode</td>
+    <td style="padding: 6px 0; text-align: left;">{{ payment_mode }}</td>
+  </tr>
+  <tr>
+    <td style="padding: 6px 0; font-weight: bold; text-align: left;">Amount</td>
+    <td style="padding: 6px 0; font-weight: bold; text-align: left;">₹ {{ amount }}</td>
+  </tr>
+  <tr>
+    <td style="padding: 6px 0; font-weight: bold; text-align: left;">Message</td>
+    <td style="padding: 6px 0; color: #2e7d32; text-align: left;">{{ message }}</td>
+  </tr>
+</table>
+
+{% if invoice_url %}
+<a href="#" onclick="downloadInvoice('{{ invoice_url }}'); return false;"
+   style="display: inline-block; padding: 10px 16px; background-color: #4892ed;
+          color: #ffffff; text-decoration: none; border-radius: 4px; font-weight: 500;"
+   class="btn btn-success">
+    Download Invoice
+</a>
+
+<script>
+function downloadInvoice(url) {
+    fetch(url)
+        .then(res => {
+            if (!res.ok) throw new Error("Network response was not ok");
+            return res.blob();
+        })
+        .then(blob => {
+            const link = document.createElement('a');
+            link.href = window.URL.createObjectURL(blob);
+            console.log(link.href)
+            // Set filename dynamically if you want
+            link.download = 'DDA Invoice.pdf';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        })
+        .catch(err => {
+            console.error("PDF download failed", err);
+            alert("Failed to download invoice. Please try manually.");
+        });
+}
+</script>
+{% endif %}
+<button onclick="window.print()"
+        style="display: inline-block; padding: 10px 16px; background-color: #4892ed; color: #ffffff;
+               border: none; border-radius: 4px; font-weight: 500; cursor: pointer;">
+    Print Challan Receipt
+</button>
+<!-- <button onclick="redirectUrl('{{ redirect_url }}')"
+        style="display: inline-block; padding: 10px 16px; background-color: #4892ed; color: #ffffff;
+               border: none; border-radius: 4px; font-weight: 500; cursor: pointer;">
+    Return to Application
+</button> -->
+<script>
+window.onload = function() {
+    window.print();
+};
+</script>
+<script>
+function redirectUrl(url) {
+      window.location.href = url;
+}
+</script>
+</div>
+</body>
+</html>

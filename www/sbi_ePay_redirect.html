@@ -1,0 +1,24 @@
+<body onload="document.forms[0].submit()">
+
+	<form name="form1" method="post" id="form1" action="{{ action }}">
+		<table>
+			<tr>
+				<td width="20px">
+					<input
+						type="hidden"
+						name="EncryptTrans"
+						id="EncryptTrans"
+						value="{{ EncryptTrans }}"
+					/>
+					<input
+						type="hidden"
+						name="merchIdVal"
+						id="merchIdVal"
+						value="{{ merchIdVal }}"
+					/>
+				</td>
+			</tr>
+		</table>
+		<p>Redirecting to SBI ePay...</p>
+	</form>
+</body>

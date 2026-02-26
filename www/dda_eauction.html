@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>DDA Online Payment</title>
+
+    <style>
+        :root {
+            --primary: #1b5e20;
+            --primary-light: #edf7ef;
+            --bg: #f4f6f9;
+            --card: #ffffff;
+            --border: #dde3e8;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: Inter, "Segoe UI", Arial, sans-serif;
+            background: var(--bg);
+            font-size: 13px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 20px auto;
+            padding: 0 12px;
+        }
+
+        .card {
+            background: var(--card);
+            border-radius: 10px;
+            box-shadow: 0 8px 22px rgba(0,0,0,.06);
+            margin-bottom: 14px;
+            overflow: hidden;
+        }
+
+        .card-title {
+            padding: 10px 14px;
+            background: var(--primary-light);
+            color: var(--primary);
+            font-weight: 700;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .card-body {
+            padding: 12px 14px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        td, th {
+            padding: 6px 8px;
+            border: 1px solid var(--border);
+        }
+
+        th {
+            background: #f3f5f7;
+            text-align: center;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 6px 8px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 13px;
+        }
+
+        label.required::after {
+            content: " *";
+            color: #d32f2f;
+            font-weight: 700;
+        }
+
+        .note {
+            color: #b71c1c;
+            font-size: 12.5px;
+            line-height: 1.45;
+        }
+
+        /* File details */
+        .file-details-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px 24px;
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .file-no-field {
+            grid-column: 1 / -1;
+        }
+
+        .file-no-inputs {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+        }
+
+        .file-no-inputs span {
+            font-weight: 700;
+            font-size: 16px;
+            white-space: nowrap;
+        }
+
+        .round-btn {
+            background: #589ee4;
+            color: #fff;
+            border: none;
+            padding: 6px 14px;
+            font-size: 12px;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+
+        /* Payment */
+        .payment-table th,
+        .payment-table td {
+            border: 1px solid var(--border);
+            padding: 8px;
+            text-align: center;
+        }
+
+        .total-row {
+            margin-top: 10px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            font-weight: bold;
+        }
+
+        .payment-mode {
+            display: flex;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .mode-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+        }
+
+        /* Captcha */
+        .captcha {
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: 5px;
+            background: #f1f3f4;
+            padding: 8px 18px;
+            border-radius: 8px;
+            color: var(--primary);
+        }
+
+        .actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        .btn {
+            padding: 8px 22px;
+            border-radius: 8px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: #fff;
+        }
+
+        .btn-secondary {
+            background: #9e9e9e;
+            color: #fff;
+        }
+
+        .note-red {
+            color: #b71c1c;
+            font-size: 12.5px;
+            text-align: center;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+
+        .footer {
+            text-align: center;
+            font-size: 12px;
+            color: #777;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <style>
+.page-navbar {
+    background-color: #6fad5f; /* Example dark green background */
+    padding: 8px 8px;          /* Smaller padding to reduce height */
+    color: white;               /* White text color */
+    font-size: 16px;            /* Smaller font size if needed */
+    font-weight: bold;
+    /* Optional: keep the text vertically centered */
+    display: flex;
+    align-items: center;
+}
+.page-navbar h2 {
+    margin: 0; /* Remove default margin */
+}
+</style>
+
+<div class="page-navbar">
+    <h2>Generate E-Auction Plots</h2>
+</div>
+
+    <!-- Instructions -->
+    <div class="card">
+        <div class="card-title">Important Instructions:- To fillup challan and make payment</div>
+        <div class="card-body note">
+            Note 1:- Challan once generated and payment made through it, can't be used again the same challan.
+Payment made through used challan shall be treated as Invalid !<br>
+नोट 1:- एक बार चालान बनाने के बाद और इसके माध्यम से एक बार भुगतान करने के पश्चात्, उसी चालान को दोबारा भुगतान करने के लिए प्रयोग नहीं किया जा सकता है।चालान के माध्यम से दुबारा किया गया भुगतान अमान्य माना जाएगा!<br>
+Note 2:- Pay exact amount which is given in challan, more or less payment amount shall be treated as Invalid !<br>
+नोट 2:- चालान में जो राशि दी गई है, उसका सटीक भुगतान करें, कम या ज्यादा भुगतान राशि को अमान्य माना जाएगा!<br>
+ Note 3:- No Chargeback will be permitted through Banks. For any chargeback, the customer/allottee will have to contact DDA. Misuse of charge back facility may lead to cancellation of allotment/application
+        </div>
+    </div>
+
+    <!-- File Details -->
+    <div class="card">
+        <div class="card-title">File Details</div>
+        <div class="card-body file-details-grid">
+
+            <div class="field">
+                <label class="required">Scheme</label>
+                <select>
+                    <option>-- Select --</option>
+                    <option>DDA Housing Scheme</option>
+                    <option>DDA SFS</option>
+                </select>
+            </div>
+
+            <div class="field">
+                <label class="required">Zone</label>
+                <select>
+                    <option>North</option>
+                    <option>South</option>
+                    <option>East</option>
+                    <option>West</option>
+                </select>
+            </div>
+
+            <div class="field">
+                <label class="required">Locality</label>
+                <input>
+            </div>
+<div class="field">
+                <label class="required">PAN Number</label>
+                <input>
+            </div>
+            <div class="field">
+                <label class="required">Bidder User ID</label>
+                <input>
+            </div>
+            <!-- <button>a href </button> -->
+            <div class="field">
+                <label class="required">Plot No</label>
+                <input>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Flat Details -->
+    <div class="card">
+        <div class="card-title">Flat / Plot / Unit Details</div>
+        <div class="card-body">
+            <table>
+                <tr>
+                    <td>Sector</td><td><input></td>
+                    <td>Block</td><td><input></td>
+                    <td>Pocket</td><td><input></td>
+                </tr>
+                <tr>
+                    <td><label class="required">Flat / Unit No</label></td><td><input></td>
+                    <td>Floor</td><td><input></td>
+                    <td>Area (Sq. Mtr)</td><td><input></td>
+                </tr>
+                  <td>Remarks If any</td><td><input></td>
+            </table>
+        </div>
+    </div>
+
+    <!-- Allottee -->
+    <div class="card">
+        <div class="card-title">Allottee Details</div>
+        <div class="card-body">
+            <table>
+                <tr>
+                    <td><label class="required">Name</label></td>
+                    <td><input></td>
+                    <td><label class="required">Depositor</label></td>
+                    <td><input></td>
+
+                </tr>
+                <tr>
+                    <td><label class="required">Mobile</label></td>
+                    <td><input></td>
+                    <td><label class="required">Email</label></td>
+                    <td><input></td>
+                </tr>
+                <tr>  <td><label class="required">Address 1</label></td>
+                    <td><input></td>
+                    <tr>
+                <tr>  <td><label>Address line 2</label></td>
+                    <td><input></td>
+                    <td><label class="required">PIN code</label>
+                    <td><input></td>
+                    </td>
+                      <tr>
+            </table>
+        </div>
+    </div>
+
+    <!-- Payment -->
+    <div class="card">
+        <div class="card-title">Payment Details</div>
+        <div class="card-body">
+            <table class="payment-table">
+                <tr>
+                    <th>#</th>
+                    <th>Payment Type</th>
+                    <th>Amount</th>
+                    <th>Remarks</th>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td><select><option>Select</option></select></td>
+                    <td><input></td>
+                    <td><input></td>
+                </tr>
+            </table>
+
+            <div class="total-row">
+                Total Amount
+                <input style="width:160px">
+            </div>
+        </div>
+    </div>
+
+    <!-- Mode -->
+    <div class="card">
+        <div class="card-title">Mode of Payment</div>
+        <div class="card-body payment-mode">
+            <label class="mode-option"><input type="radio"> RTGS / NEFT</label>
+            <label class="mode-option"><input type="radio"> Net Banking</label>
+        </div>
+    </div>
+
+    <!-- Captcha -->
+    <div class="card">
+        <div class="card-title">Generate Challan</div>
+        <div class="card-body" style="text-align:center">
+            <div class="captcha">A 8 9 K Q</div><br>
+            <input placeholder="Enter Code" style="max-width:200px">
+            <div class="actions">
+                <button class="btn btn-primary">Generate</button>
+                <button class="btn btn-secondary">Clear</button>
+            </div>
+            <div class="note-red">
+                Please check your email (including Spam) for challan details.
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        © DDA — Government of India
+    </div>
+
+</div>
+
+</body>
+</html>
