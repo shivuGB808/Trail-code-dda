@@ -1,0 +1,439 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:{########}",
+ "creation": "2026-01-14 11:39:07.811033",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "department",
+  "scheme",
+  "source_type",
+  "file_name",
+  "column_break_qssd",
+  "zone",
+  "locality",
+  "pdf_file",
+  "public_token",
+  "token_expiry",
+  "file_number_section",
+  "category_header",
+  "column_break_dyxi",
+  "locality_header",
+  "column_break_vbnz",
+  "sequence_no",
+  "column_break_ankw",
+  "year",
+  "column_break_myyh",
+  "scheme_id",
+  "column_break_pxmj",
+  "locality_id",
+  "flatplotunit_details_section",
+  "sector",
+  "flatplotunit_no",
+  "area_sq_mtr",
+  "column_break_ikvj",
+  "block",
+  "floor",
+  "scheme_descr",
+  "column_break_ufxr",
+  "pocket",
+  "fl_noid",
+  "allottee_details_section",
+  "name_of_the_allottee",
+  "depositor_name",
+  "email_id",
+  "mobile_number",
+  "pan_number",
+  "aadhaar_no",
+  "column_break_xyvi",
+  "address_line_1",
+  "address_line_2",
+  "address_line_3",
+  "pincode",
+  "gst_type",
+  "gst_number",
+  "section_break_fvhd",
+  "type_of_payments",
+  "total_amount",
+  "section_break_lujy",
+  "bank_account_no",
+  "column_break_qchd",
+  "bank_name",
+  "column_break_qwnm",
+  "ifsc_code",
+  "virtual_bank_acc",
+  "section_break_ikml",
+  "mode_of_payment",
+  "column_break_vqip",
+  "payment_status",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "scheme",
+   "fieldtype": "Data",
+   "label": "Scheme"
+  },
+  {
+   "fieldname": "zone",
+   "fieldtype": "Data",
+   "label": "Zone"
+  },
+  {
+   "fieldname": "locality",
+   "fieldtype": "Data",
+   "label": "Locality"
+  },
+  {
+   "fieldname": "flatplotunit_details_section",
+   "fieldtype": "Section Break",
+   "label": "Flat/Plot/Unit Details"
+  },
+  {
+   "fieldname": "sector",
+   "fieldtype": "Data",
+   "label": "Sector"
+  },
+  {
+   "fieldname": "flatplotunit_no",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Flat/Plot/Unit No. "
+  },
+  {
+   "fieldname": "area_sq_mtr",
+   "fieldtype": "Float",
+   "label": "Area Sq. Mtr."
+  },
+  {
+   "fieldname": "column_break_ikvj",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "block",
+   "fieldtype": "Data",
+   "label": " \tBlock"
+  },
+  {
+   "fieldname": "floor",
+   "fieldtype": "Data",
+   "label": "Floor"
+  },
+  {
+   "fieldname": "scheme_descr",
+   "fieldtype": "Data",
+   "label": "Scheme"
+  },
+  {
+   "fieldname": "column_break_ufxr",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "pocket",
+   "fieldtype": "Data",
+   "label": "Pocket "
+  },
+  {
+   "fieldname": "fl_noid",
+   "fieldtype": "Data",
+   "label": "FL No./ID"
+  },
+  {
+   "fieldname": "allottee_details_section",
+   "fieldtype": "Section Break",
+   "label": "Allottee Details"
+  },
+  {
+   "fieldname": "name_of_the_allottee",
+   "fieldtype": "Data",
+   "label": "Name of the Allottee"
+  },
+  {
+   "fieldname": "depositor_name",
+   "fieldtype": "Data",
+   "label": "Depositor Name"
+  },
+  {
+   "fieldname": "email_id",
+   "fieldtype": "Data",
+   "label": "Email ID"
+  },
+  {
+   "fieldname": "mobile_number",
+   "fieldtype": "Data",
+   "label": "Mobile Number"
+  },
+  {
+   "fieldname": "pan_number",
+   "fieldtype": "Data",
+   "label": "PAN Number"
+  },
+  {
+   "fieldname": "aadhaar_no",
+   "fieldtype": "Int",
+   "label": "Aadhaar No.",
+   "length": 16,
+   "non_negative": 1
+  },
+  {
+   "fieldname": "column_break_xyvi",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "pincode",
+   "fieldtype": "Int",
+   "label": "Pincode"
+  },
+  {
+   "fieldname": "gst_number",
+   "fieldtype": "Data",
+   "label": "GST Number"
+  },
+  {
+   "fieldname": "section_break_fvhd",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "type_of_payments",
+   "fieldtype": "Table",
+   "label": "Type of Payments",
+   "options": "Challan Payment Child table"
+  },
+  {
+   "fieldname": "total_amount",
+   "fieldtype": "Currency",
+   "label": "Total Amount"
+  },
+  {
+   "fieldname": "section_break_lujy",
+   "fieldtype": "Section Break",
+   "label": "Refund Bank Details"
+  },
+  {
+   "fieldname": "bank_account_no",
+   "fieldtype": "Int",
+   "label": "Bank Account No."
+  },
+  {
+   "fieldname": "column_break_qchd",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "bank_name",
+   "fieldtype": "Data",
+   "label": "Bank Name"
+  },
+  {
+   "fieldname": "column_break_qwnm",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "ifsc_code",
+   "fieldtype": "Data",
+   "label": "IFSC Code"
+  },
+  {
+   "fieldname": "section_break_ikml",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "mode_of_payment",
+   "fieldtype": "Select",
+   "label": "Mode of Payment",
+   "options": "--Select--\nRTGS / NEFT\nNet Banking / SBI NEFT"
+  },
+  {
+   "fieldname": "column_break_vqip",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "department",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Department"
+  },
+  {
+   "fieldname": "file_number_section",
+   "fieldtype": "Section Break",
+   "hidden": 1
+  },
+  {
+   "fieldname": "category_header",
+   "fieldtype": "Data",
+   "label": "CH"
+  },
+  {
+   "fieldname": "locality_header",
+   "fieldtype": "Data",
+   "label": "LH"
+  },
+  {
+   "fieldname": "column_break_dyxi",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "sequence_no",
+   "fieldtype": "Data",
+   "label": "SN"
+  },
+  {
+   "fieldname": "column_break_vbnz",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "year",
+   "fieldtype": "Data",
+   "label": "Year"
+  },
+  {
+   "fieldname": "column_break_ankw",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "scheme_id",
+   "fieldtype": "Data",
+   "label": "SI"
+  },
+  {
+   "fieldname": "column_break_myyh",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_pxmj",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "locality_id",
+   "fieldtype": "Data",
+   "label": "LI"
+  },
+  {
+   "fieldname": "file_name",
+   "fieldtype": "Data",
+   "label": "File Number"
+  },
+  {
+   "fieldname": "source_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Source Type",
+   "options": "Flats\nPlots",
+   "read_only": 1
+  },
+  {
+   "fieldname": "address_line_1",
+   "fieldtype": "Data",
+   "label": "Address Line 1"
+  },
+  {
+   "fieldname": "address_line_2",
+   "fieldtype": "Data",
+   "label": "Address Line 2"
+  },
+  {
+   "fieldname": "address_line_3",
+   "fieldtype": "Data",
+   "label": "Address Line 3"
+  },
+  {
+   "fieldname": "gst_type",
+   "fieldtype": "Select",
+   "label": "Is GST Applicable?",
+   "options": "Not Applicable\nIndividual\nCompany"
+  },
+  {
+   "allow_on_submit": 1,
+   "default": "Unpaid",
+   "fieldname": "payment_status",
+   "fieldtype": "Select",
+   "label": "Payment Status",
+   "options": "Paid\nPartially Paid\nUnpaid"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Challan",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "column_break_qssd",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "pdf_file",
+   "fieldtype": "Data",
+   "label": "PDF File"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "public_token",
+   "fieldtype": "Data",
+   "label": "Public Token"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "token_expiry",
+   "fieldtype": "Datetime",
+   "label": "Token Expiry"
+  },
+  {
+   "fieldname": "virtual_bank_acc",
+   "fieldtype": "Data",
+   "label": "Virtual Bank Acc "
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [
+  {
+   "link_doctype": "PG Transactions",
+   "link_fieldname": "document_id"
+  },
+  {
+   "link_doctype": "Sales Invoice",
+   "link_fieldname": "po_no"
+  },
+  {
+   "link_doctype": "Payment Entry",
+   "link_fieldname": "custom_reference_document"
+  },
+  {
+   "link_doctype": "Refund Request",
+   "link_fieldname": "refference_name"
+  }
+ ],
+ "modified": "2026-02-27 13:25:47.027807",
+ "modified_by": "shivana@bel.co.in",
+ "module": "DDA Receipts",
+ "name": "Challan",
+ "naming_rule": "Expression (old style)",
+ "owner": "poojasharma@bel.co.in",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}
