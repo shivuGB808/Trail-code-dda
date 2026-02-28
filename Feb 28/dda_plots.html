@@ -1,0 +1,1380 @@
+
+
+<!DOCTYPE html>
+<html>
+<head>
+ 
+    <title>DDA Online Payment</title>
+
+    <style>
+        :root {
+            --primary: #1b5e20;
+            --primary-light: #edf7ef;
+            --bg: #f4f6f9;
+            --card: #ffffff;
+            --border: #dde3e8;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Inter, "Segoe UI", Arial, sans-serif;
+            background: var(--bg);
+            font-size: 13px;
+            color: #333;
+        }
+
+        /* ===== PAGE NAVBAR ===== */
+        .page-navbar {
+            position: sticky;
+            top: 12px;
+            z-index: 100;
+
+            max-width: 1070px;
+            margin: 12px auto 14px;
+            padding: 8px 0;
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+
+            background: linear-gradient(90deg, #5f9262, #2e7d32);
+            border-radius: 14px;
+            box-shadow: 0 6px 16px rgba(0,0,0,.18);
+
+            transition: transform .35s ease, opacity .35s ease;
+            overflow: hidden;
+        }
+
+        .page-navbar.hide {
+            transform: translateY(-120%);
+            opacity: 0;
+        }
+
+        .page-navbar a {
+            text-decoration: none;
+            font-weight: 600;
+            color: #e8f5e9;
+            padding: 6px 14px; /* spacing inside links */
+            border-radius: 20px;
+            transition: all .25s;
+        }
+
+        .page-navbar a:hover {
+            background: rgba(255,255,255,.18);
+        }
+
+        .page-navbar a.active {
+            background: #fff;
+            color: #2e7d32;
+            box-shadow: 0 2px 6px rgba(0,0,0,.25);
+        }
+
+        /* ===== PAGE ===== */
+        .container {
+            max-width: 1100px;
+            margin: 8px auto;
+            padding: 0 12px;
+        }
+
+        /* ===== CARD ===== */
+        .card {
+            background: var(--card);
+            border-radius: 10px;
+            box-shadow: 0 8px 22px rgba(0,0,0,.06);
+            margin-bottom: 12px;
+            overflow: hidden;
+        }
+
+        .card-title {
+            padding: 10px 14px;
+            background: var(--primary-light);
+            color: var(--primary);
+            font-weight: 700;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .card-body {
+            padding: 12px 14px;
+        }
+
+        /* ===== TABLE ===== */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        td, th {
+            padding: 6px 8px;
+            border: 1px solid var(--border);
+        }
+
+        th {
+            background: #f3f5f7;
+            text-align: center;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 6px 8px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 13px;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(27,94,32,.15);
+        }
+
+        .note {
+            color: #b71c1c;
+            font-size: 12.5px;
+            line-height: 1.45;
+        }
+
+        /* ===== TOTAL ===== */
+        .total-box {
+            margin-top: 8px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+            font-weight: 700;
+        }
+
+        /* ===== BUTTONS ===== */
+        .actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 8px 22px;
+            border-radius: 8px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: #fff;
+        }
+
+        .btn-secondary {
+            background: #9e9e9e;
+            color: #fff;
+        }
+
+        /* ===== CAPTCHA ===== */
+        .captcha-box {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+
+        .captcha {
+            font-size: 22px;
+            font-weight: 700;
+            background: #f1f3f4;
+            padding: 6px 16px;
+            border-radius: 8px;
+            letter-spacing: 5px;
+            color: var(--primary);
+        }
+
+        .footer {
+            text-align: center;
+            font-size: 12px;
+            color: #777;
+            margin: 20px 0;
+        }
+
+
+.file-details-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px 24px;
+}
+
+/* Fields */
+.file-details-grid .field {
+    display: flex;
+    flex-direction: column;
+}
+
+/* File No takes full row */
+.file-no-field {
+    grid-column: 1 / -1; /* span full width */
+}
+
+/* Force single-line inputs */
+.file-no-inputs {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: nowrap;          /* ❗ one line only */
+    overflow-x: auto;           /* mobile safety */
+    padding-bottom: 4px;
+}
+
+.file-no-inputs span {
+    font-weight: 700;
+    font-size: 16px;
+    white-space: nowrap;
+}
+
+.file-no-inputs input {
+    flex: 0 0 auto;             /* prevent shrinking */
+}
+
+
+/* Mandatory field star */
+label.required::after {
+    content: " *";
+    color: #d32f2f;
+    font-weight: 700;
+}
+
+.round-btn {
+    background: #589ee4;
+    color: #fff;
+    border: none;
+    padding: 6px 14px;
+    font-size: 12px;
+    border-radius: 20px;   /* makes it round */
+    cursor: pointer;
+}
+
+.round-btn:hover {
+    background: #77a7dd;
+}
+
+
+.payment-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.payment-table th,
+.payment-table td {
+    border: 1px solid #dde3e8;
+    padding: 8px;
+    text-align: center;
+}
+
+.payment-table th {
+    background: #f3f5f7;
+}
+
+.payment-table input,
+.payment-table select {
+    width: 100%;
+    padding: 6px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 13px;
+}
+
+.total-row {
+    margin-top: 12px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    font-weight: bold;
+}
+
+.total-row input {
+    width: 160px;
+}
+
+.req {
+    color: red;
+}
+
+.payment-mode {
+    display: flex;
+    gap: 40px;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.mode-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.mode-option input[type="radio"] {
+    transform: scale(1.1);
+}
+
+
+/* ===== NAVBAR FIX ===== */
+.page-navbar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: linear-gradient(90deg, #5f9262, #2e7d32);
+    padding: 10px 18px;
+    overflow: visible !important;
+    position: relative;
+    z-index: 1000;
+}
+
+.page-navbar a {
+    color: #fff;
+    text-decoration: none;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.page-navbar a:hover {
+    background: rgba(255,255,255,0.15);
+}
+
+/* DROPDOWN */
+.nav-dropdown {
+    position: relative;
+    overflow: visible;
+}
+
+/* MENU */
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 110%;
+    left: 0;
+    background: #fff;
+    min-width: 230px;
+    border-radius: 10px;
+    box-shadow: 0 12px 25px rgba(0,0,0,.25);
+    z-index: 99999;
+}
+
+/* SHOW ON HOVER */
+.nav-dropdown:hover .dropdown-menu {
+    display: block;
+}
+
+/* MENU LINKS */
+.dropdown-menu a {
+    display: block;
+    padding: 10px 14px;
+    color: #333;
+    font-size: 14px;
+}
+
+.dropdown-menu a:hover {
+    background: #f2f6ff;
+}
+
+/* SUB TEXT */
+.sub-text {
+    display: block;
+    font-size: 11px;
+    opacity: 0.8;
+}
+
+
+
+/* ===== GENERATE CHALLAN CAPTCHA ===== */
+.challan-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+/* Captcha text */
+.captcha {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 5px;
+    background: #f1f3f4;
+    padding: 8px 18px;
+    border-radius: 8px;
+    color: var(--primary);
+    user-select: none;
+}
+
+/* Captcha input */
+#captcha-input {
+    max-width: 200px;
+    text-align: center;
+    font-weight: 600;
+}
+
+/* Button alignment */
+.actions {
+    display: flex;
+    gap: 12px;
+}
+
+.note-red {
+    color: #b71c1c;          /* deep red */
+    font-size: 12.5px;
+    margin-top: 10px;
+    text-align: center;
+    font-weight: 600;
+}
+
+
+.payment-table th:nth-child(2),
+.payment-table td:nth-child(2) {
+    width: 50%;   /* Payment Type bigger */
+}
+
+.payment-table th:nth-child(3),
+.payment-table td:nth-child(3) {
+    width: 15%;   /* Code smaller */
+}
+
+.payment-table th:nth-child(4),
+.payment-table td:nth-child(4) {
+    width: 25%;
+}
+
+.payment-mode {
+    display: flex;
+    justify-content: center;
+    gap: 30px; /* space between options */
+    flex-wrap: wrap; /* wraps on smaller screens */
+    align-items: center;
+}
+
+
+
+
+
+
+    </style>
+</head>
+
+<body>
+
+
+
+
+
+<style>
+.page-navbar {
+    background-color: #1b5e20; /* Example dark green background */
+    padding: 8px 8px;          /* Smaller padding to reduce height */
+    color: white;               /* White text color */
+    font-size: 16px;            /* Smaller font size if needed */
+    font-weight: bold;
+    /* Optional: keep the text vertically centered */
+    display: flex;
+    align-items: center;
+}
+.page-navbar h2 {
+    margin: 0; /* Remove default margin */
+}
+</style>
+
+<div class="page-navbar">
+    <h2>Generate Plots/Plotted/CGHS/UC Properties E-Challan & Make Payment</h2>
+</div>
+
+
+
+
+
+
+</div>
+
+
+
+<div class="container">
+    <form id="challanForm">
+
+
+<!-- INSTRUCTIONS -->
+<div class="card">
+    <div class="card-title">Important Instructions:- To fillup challan and make payment</div>
+    <div class="card-body note">
+      Note 1:- Challan once generated and payment made through it, can't be used again the same challan.
+Payment made through used challan shall be treated as Invalid ! <br>
+नोट 1:- एक बार चालान बनाने के बाद और इसके माध्यम से एक बार भुगतान करने के पश्चात्, उसी चालान को दोबारा भुगतान करने के लिए प्रयोग नहीं किया जा सकता है।चालान के माध्यम से दुबारा किया गया भुगतान अमान्य माना जाएगा!<br>
+Note 2:- Pay exact amount which is given in challan, more or less payment amount shall be treated as Invalid !<br>
+नोट 2:- चालान में जो राशि दी गई है, उसका सटीक भुगतान करें, कम या ज्यादा भुगतान राशि को अमान्य माना जाएगा!<br>
+ Note 3:- No Chargeback will be permitted through Banks. For any chargeback, the customer/allottee will have to contact DDA. Misuse of charge back facility may lead to cancellation of allotment/application
+    </div>
+</div>
+
+<!-- FILE DETAILS -->
+<div class="card">
+    <div class="card-title">File Details</div>
+    <div class="card-body file-details-grid">
+
+        <div class="field">
+            <label class="required">Select Department</label>
+
+            <select  id="scheme" name="scheme" required>
+                <option>-- Select --</option>
+               <option>Building</option>
+               <option>Commercial Estate</option>
+               <option>CO-OPERATIVE SOCIETY</option>
+               <option>DAMAGE (LM)</option>
+               <option>LICENCE ALLOTMENT </option>
+               <option>ROHINI </option>
+               <option>UNAUTHORISED COLONIES </option>
+
+                  </option>
+
+
+
+
+
+            </select>
+        </div>
+
+
+
+
+<div class="field">
+    <label class="required">Zone</label>
+
+
+<select id="zone" name="zone" required>
+
+    <!-- <select name="zone" required> -->
+        <option value="">Select Zone</option>
+
+        {% for zone in bhoomizones %}
+            <option value="{{ zone.name}}">
+                {{ zone.bhoomi_zone_name}}
+            </option>
+        {% endfor %}
+    </select>
+
+    <!-- <small style="color:#0d47a1; cursor:pointer;">
+        To know your zone, click here
+    </small> -->
+</div>
+
+        <div class="field">
+            <label class="required">Locality</label>
+            <select id="locality" name="locality" required>
+
+            <!-- <select name="locality" required> -->
+            <option value="">Select</option>
+            </select>
+
+        </div>
+
+        <!-- <select id="locality">
+    <option value="">Select Locality</option>
+</select> -->
+
+
+        <!-- File No : full width & single line -->
+        <div class="field file-no-field">
+            <label class="required">File No.</label>
+
+            <div class="file-no-inputs">
+                <!-- <input placeholder="L" style="width:60px"> -->
+                 <select id="category_header" name="category_header" style="width:80px">
+        <option value="">select</option>
+        <option value="M">M</option>
+        <option value="N">N</option>
+        <option value="L">L</option>
+        <option value="K">K</option>
+    </select>
+                <span>/</span>
+                <input id="locality_header" name="locality_header" style="width:80px">
+                <span>(</span>
+                 <input id="sequence_no" name="sequence_no" style="width:80px">
+                <span>)</span>
+                <input id="year" name="year" style="width:80px">
+                <span>/</span>
+                <input id="scheme_id" name="scheme_id" style="width:80px" readonly>
+                <span>/</span>
+                <input id="locality_id" name="locality_id" style="width:60px" readonly>Ensure to Fill Correct File No.<br>
+<button type="button" id="findBtn" class="round-btn">Find</button>
+
+            </div>
+            <div class="note">
+                <b>Note:</b> L / 312 (0001) 2003 / NPRS / DW
+                L = Category Header, 312 = Locality Header,
+                (0001) = Sequence No, 2003 = Year,
+                NPRS = Scheme ID, DW = Locality ID
+            </div>
+
+
+        </div>
+    </div>
+</div>
+ <div class="card">
+        <div class="card-title">Flat / Plot / Unit Details</div>
+        <div class="card-body">
+            <table>
+                <tr>
+                    <td>Sector</td><td><input id="sector" name="sector"></td>
+                    <td>Block</td><td><input id="block" name="block"></td>
+                    <td>Pocket</td><td><input id="pocket" name="pocket"></td>
+
+<td>
+    <label class="required"><b>Flat / Unit No</b></label>
+</td>
+<td>
+    <input  id="flatplotunit_no" name="flatplotunit_no" required>
+</td>
+                     <!-- <td><b>Flat / Unit No</b></td><td><input></td> -->
+                </tr>
+                <tr>
+
+                    <td>Floor</td><td><input id="floor" name="floor"></td>
+                    <td>FL NO/ID</td><td><input id="fl_noid" name="fl_noid"></td>
+                    <td>Area (Sq. Mtr)</td><td><input id="area_sq_mtr" name="area_sq_mtr"></td>
+                    <td>Scheme</td><td><input id="scheme_descr" name="scheme_descr"></td>
+                </tr>
+               <td><label >Remarks If any </label></td>
+                <td colspan="6">
+                    <input id="remarks" name="remarks" >
+                </td>
+            </table>
+        </div>
+    </div>
+
+
+
+
+<!-- ALLOTTEE -->
+<div class="card">
+    <div class="card-title">Allottee Details</div>
+    <div class="card-body">
+        <table>
+            <tr>
+                <td><label class="required">Name of the Allottee/Applicant</label></td>
+                <td colspan="3"><input id="name_of_the_allottee" name="name_of_the_allottee" required></td>
+
+                <td><label class="required">Depositor Name</label></td>
+                <td colspan="1.5"><input id="depositor_name" name="depositor_name" required></td>
+
+
+
+
+
+
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <label  class="required">Mobile No.</label>
+
+                    <div style="font-size:11px; color:#555;">(Do not add +91)</div>
+                </td>
+                <td>
+                    <input id="mobile_number" name="mobile_number" type="tel"
+                           pattern="[0-9]{10}"
+                           maxlength="10"
+                           required
+                           placeholder="10-digit mobile number">
+                </td>
+                <td><label class="required">Email ID</label></td>
+                <td colspan="1">
+                    <input id="email_id" name="email_id" type="email" required>
+                </td>
+               <td><label>PAN Number</label></td>
+                <td colspan="1">
+                    <input id="pan_number" name="pan_number" required placeholder="Enter PAN Number">
+                </td>
+            </tr>
+
+            <tr>
+
+            </tr>
+
+
+<tr>
+    <td>
+    <label>GST Registration</label>
+</td>
+    <td>
+    <select id="gst_type" name="gst_type">
+        <option value="Not Applicable">Not Applicable</option>
+        <option value="Company">Company</option>
+        <option value="Individual">Individual</option>
+    </select>
+</td>
+
+<td id="gst_label_cell" style="display:none;">
+    <label>GST Number</label>
+</td>
+
+<td id="gst_input_cell" style="display:none;">
+    <input id="gst_number" name="gst_number"
+           placeholder="15 Character GST Number"
+           maxlength="15">
+</td>
+</tr>
+
+
+            <!-- Address Line 1 -->
+            <tr>
+                <td><label class="required">Address Line 1</label></td>
+                <td colspan="2">
+                    <input id="address_line_1" name="address_line_1" required placeholder="House No / Street / Building">
+                </td>
+                <td><label>Address Line 2</label></td>
+                <td colspan="3">
+                    <input id="address_line_2" name="address_line_2" required placeholder="Area / Locality">
+                </td>
+            </tr>
+
+
+
+            <!-- Address Line 3 -->
+            <tr>
+                <td><label >Address Line 3</label></td>
+                <td colspan="3">
+                    <input id="address_line_3" name="address_line_3" required placeholder="City / State">
+                </td>
+                 <td>
+    <label class="required">Pin Code</label>
+</td>
+<td>
+    <input id="pincode" name="pincode" type="text"
+           maxlength="6"
+           pattern="[0-9]{6}"
+           required
+           placeholder="6-digit PIN">
+</td>
+
+            </tr>
+
+        </table>
+    </div>
+</div>
+
+<!-- PAYMENT -->
+<div class="card">
+    <div class="card-title">Payment Details</div>
+    <div class="card-body">
+
+        <table class="payment-table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Payment Type <span class="req">*</span></th>
+                     <th>Code</th>
+                    <th>Amount (₹) <span class="req">*</span></th>
+
+                </tr>
+            </thead>
+
+            <tbody>
+{% for i in range(1,5) %}
+<tr>
+    <td>{{ i }}</td>
+
+    <!-- Payment Type -->
+    <td>
+        <select name="payment_type" class="payment-type">
+            <option value="" selected disabled>Select</option>
+            {% for r in receipt %}
+                <option value="{{ r.receipt_code }}">
+                    {{ r.receipt_type }}
+                </option>
+            {% endfor %}
+        </select>
+    </td>
+
+    <!-- Code (Auto Filled & Readonly) -->
+    <td>
+        <input name="payment_code" type="text" class="receipt-code" readonly>
+    </td>
+
+    <!-- Amount -->
+    <td>
+        <input  name="amount" type="number" class="amount-field">
+    </td>
+</tr>
+{% endfor %}
+</tbody>
+
+        </table>
+
+        <!-- TOTAL -->
+        <div class="total-row">
+            <label>Total Amount</label>
+            <input id="total_amount" name="total_amount" readonly value="0">
+        </div>
+
+    </div>
+</div>
+
+
+
+
+
+<!-- Hidden template row for JS cloning -->
+<table style="display:none;">
+    <tbody id="payment-type-template">
+        <tr>
+            <td>0</td>
+            <td>
+                <select class="payment-type">
+                    <option value="" disabled selected>Select</option>
+                    {% for r in receipt %}
+                        <option value="{{ r.receipt_code }}">{{ r.receipt_type }}</option>
+                    {% endfor %}
+                </select>
+            </td>
+            <td><input type="text" class="receipt-code" readonly></td>
+            <td><input type="number" class="amount-field" value="0" step="0.01"></td>
+        </tr>
+    </tbody>
+</table>
+
+
+
+
+
+
+
+  <div class="card">
+    <div class="card-title">Mode of Payment</div>
+
+    <div class="card-body" style="display:flex; flex-direction:column; gap:25px; align-items:center;">
+
+        <!-- Payment Mode Row (Single Line) -->
+        <div style="display:flex; justify-content:center; gap:60px; align-items:center; flex-wrap:nowrap;">
+            
+            <label class="mode-option" style="white-space:nowrap;">
+                <input type="radio" name="payment_mode" value="RTGS">
+                <span>RTGS / NEFT</span>
+            </label>
+
+            <label class="mode-option" style="white-space:nowrap;">
+                <input type="radio" name="payment_mode" value="NETBANKING">
+                <span>Net Banking (Payment Gateway)</span>
+            </label>
+
+        </div>
+<!-- Bank + IFSC (Side by Side) -->
+<div id="bank-section" 
+     style="display:none; gap:40px; align-items:center; justify-content:center; flex-wrap:wrap;">
+
+    <!-- Bank -->
+    <div style="display:flex; align-items:center; gap:10px;">
+        <label style="white-space:nowrap;">Select Bank</label>
+        <select id="bank_select" style="width:220px;">
+            <option value="">Select Bank</option>
+            <option value="CBI" data-ifsc="CBIN0282695">
+                Central Bank of India
+            </option>
+            <option value="SBI" data-ifsc="SBIN0000114">
+                State Bank of India
+            </option>
+        </select>
+    </div>
+
+    <!-- IFSC -->
+    <div style="display:flex; align-items:center; gap:10px;">
+        <label style="white-space:nowrap;">IFSC Code</label>
+        <input type="text" id="ifsc_code" readonly style="width:220px;">
+    </div>
+
+</div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+<!-- CAPTCHA -->
+
+<div class="card">
+    <div class="card-title">Generate Challan</div>
+
+    <div class="card-body captcha-box challan-box">
+        <div class="captcha">
+            <!-- BP01X -->
+            {{ captcha }}
+        </div>
+
+        <input
+            type="text"
+            id="captcha-input"
+            placeholder="Enter Code"  style="max-width:200px"
+            required
+        > Please enter image code
+
+
+    </div>
+        <div class="note-red">
+    <b>Note:</b> For get your challan details, please check your mail ID, including the Spam folder.
+</div><br>
+
+           <div class="actions">
+            <button class="btn btn-primary" type="submit">
+
+            <!-- <button class="btn btn-primary" type="button"> -->
+                Generate
+            </button>
+            <button class="btn btn-secondary" type="reset">
+                Clear
+            </button>
+        </div>
+</div>
+
+</form>
+
+
+
+<div class="footer">
+    © DDA — Government of India
+</div>
+
+</div>
+
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+
+    const findBtn = document.getElementById("findBtn");
+
+    findBtn.addEventListener("click", async function() {
+
+        const category_header = document.getElementById("category_header").value;
+        const locality_header = document.getElementById("locality_header").value;
+        const sequence_no = document.getElementById("sequence_no").value;
+        const year = document.getElementById("year").value;
+        const scheme_id = document.getElementById("scheme_id").value;
+        const locality_id = document.getElementById("locality_id").value;
+
+        if (!category_header || !sequence_no) {
+            alert("Please fill complete File Number");
+            return;
+        }
+
+        const url = `/api/method/dda_ifmis.dda_receipts.doctype.challan.challan.get_file_details
+?category_header=${encodeURIComponent(category_header)}
+&locality_header=${encodeURIComponent(locality_header)}
+&sequence_no=${encodeURIComponent(sequence_no)}
+&year=${encodeURIComponent(year)}
+&scheme_id=${encodeURIComponent(scheme_id)}
+&locality_id=${encodeURIComponent(locality_id)}`;
+
+        try {
+            const res = await fetch(url);
+            const r = await res.json();
+
+            if (!r.message || r.message.status !== "success") {
+                alert("File not found");
+                return;
+            }
+
+            const d = r.message.data;
+
+            // ----------------- Fill Flat / Allottee Fields -----------------
+            const fields = [
+                "sector", "block", "pocket", "flatplotunit_no", "floor", "fl_noid",
+                "area_sq_mtr", "scheme_descr", "name_of_the_allottee", "depositor_name",
+                "mobile_number", "email_id", "address_line_1", "address_line_2",
+                "address_line_3", "pincode", "pan_number"
+            ];
+
+            fields.forEach(f => {
+                const el = document.getElementById(f);
+                if (el) el.value = d[f] || "";
+            });
+
+            // ----------------- Fill Child Table -----------------
+            const tableBody = document.querySelector(".payment-table tbody");
+            tableBody.innerHTML = ""; // Clear previous rows
+            let totalAmount = 0;
+
+            if (d.type_of_payments && d.type_of_payments.length > 0) {
+                d.type_of_payments.forEach((row, index) => {
+                    // Clone template
+                    const template = document.querySelector("#payment-type-template tr");
+                    const tr = template.cloneNode(true);
+
+                    // Set row number
+                    tr.querySelector("td:first-child").textContent = index + 1;
+
+                    // Set values
+                    const paymentTypeSelect = tr.querySelector(".payment-type");
+                    const receiptCodeInput = tr.querySelector(".receipt-code");
+                    const amountInput = tr.querySelector(".amount-field");
+
+                    paymentTypeSelect.value = row.payment_type || "";
+                    receiptCodeInput.value = row.payment_code || "";
+                    amountInput.value = row.amount || 0;
+
+                    totalAmount += parseFloat(row.amount || 0);
+
+                    // Listen for changes to update total
+                    amountInput.addEventListener("input", updateTotalAmount);
+
+                    tableBody.appendChild(tr);
+                });
+            } else {
+                // If no payments, add one empty row
+                const template = document.querySelector("#payment-type-template tr");
+                const tr = template.cloneNode(true);
+                tr.querySelector("td:first-child").textContent = 1;
+                tableBody.appendChild(tr);
+            }
+
+            // ----------------- Update Total Amount -----------------
+            function updateTotalAmount() {
+                let sum = 0;
+                document.querySelectorAll(".amount-field").forEach(input => {
+                    sum += parseFloat(input.value || 0);
+                });
+                document.getElementById("total_amount").value = sum.toFixed(2);
+            }
+
+            updateTotalAmount(); // Initial total
+
+            alert("Record Found & Auto Filled ✅");
+
+        } catch (err) {
+            console.error(err);
+            alert("Server Error");
+        }
+
+    });
+
+});
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+
+    const form = document.getElementById("challanForm");
+    
+
+    form.addEventListener("submit", function(e){
+        e.preventDefault();
+
+        let formData = {};
+
+        // 1️⃣ Collect regular fields
+        form.querySelectorAll("[name]").forEach(el => {
+            if (el.type === "radio") {
+                if (el.checked) {
+                    formData[el.name] = el.value;
+                }
+            } else if (!el.classList.contains("amount-field") && !el.classList.contains("payment-type") && !el.classList.contains("receipt-code")) {
+                formData[el.name] = el.value;
+            }
+        });
+
+        // 2️⃣ Collect child table rows
+        const type_of_payments = [];
+        document.querySelectorAll(".payment-table tbody tr").forEach(tr => {
+            const payment_type = tr.querySelector(".payment-type").value;
+            const payment_code = tr.querySelector(".receipt-code").value;
+            const amount = tr.querySelector(".amount-field").value;
+
+            if (payment_type && amount) {
+                type_of_payments.push({
+                    payment_type: payment_type,
+                    payment_code: payment_code,
+                    amount: parseFloat(amount)
+                });
+            }
+        });
+        formData["type_of_payments"] = type_of_payments;
+
+        // 3️⃣ Send to backend
+
+	
+
+   fetch("/api/method/dda_ifmis.dda_receipts.doctype.challan.challan.create_challan_plots", {
+    method: "POST",
+    headers: {
+       
+        "Content-Type": "application/json",
+       
+        
+
+
+        
+    },
+    body: JSON.stringify(formData) // <-- send flat JSON
+})
+.then(res => res.json())
+.then(r => {
+    if (r.message && r.message.status === "success") {
+        alert("Challan Generated Successfully\nChallan No: " + r.message.name);
+        form.reset();
+
+        const challanName = r.message.name;
+        const token = r.message.token;
+
+        const downloadUrl = `/api/method/dda_ifmis.dda_receipts.doctype.challan.challan.download_challan?challan_name=${encodeURIComponent(challanName)}&token=${encodeURIComponent(token)}`;
+
+        const a = document.createElement("a");
+        a.href = downloadUrl;
+        a.download = `${challanName}.pdf`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+
+    } else {
+        alert("Failed to generate challan");
+        console.error(r);
+    }
+})
+.catch(err => {
+    console.error(err);
+    alert("Server error");
+});
+
+
+    });
+
+});
+</script>
+
+
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+
+    const paymentModes = document.querySelectorAll('input[name="payment_mode"]');
+    const bankSection = document.getElementById("bank-section");
+    const bankSelect = document.getElementById("bank_select");
+    const ifscInput = document.getElementById("ifsc_code");
+
+    paymentModes.forEach(radio => {
+        radio.addEventListener("change", function() {
+
+            if (this.value === "RTGS") {
+                bankSection.style.display = "flex";
+
+            } else if (this.value === "NETBANKING") {
+                // Hide bank section
+                bankSection.style.display = "none";
+                bankSelect.value = "";
+                ifscInput.value = "";
+
+                // Redirect to Make Payment page
+                window.location.href = "/makepayment";
+            }
+
+        });
+    });
+
+    // Auto-fill IFSC
+    bankSelect.addEventListener("change", function() {
+        const selectedOption = this.options[this.selectedIndex];
+        const ifsc = selectedOption.getAttribute("data-ifsc");
+        ifscInput.value = ifsc || "";
+    });
+
+});
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+
+    const paymentTypes = document.querySelectorAll(".payment-type");
+    const amountFields = document.querySelectorAll(".amount-field");
+    const totalInput = document.querySelector(".total-row input");
+
+    // 1️⃣ Auto fill receipt code
+    paymentTypes.forEach(select => {
+        select.addEventListener("change", function() {
+            const row = this.closest("tr");
+            const codeInput = row.querySelector(".receipt-code");
+
+            codeInput.value = this.value || "";
+        });
+    });
+
+    // 2️⃣ Auto calculate total
+    amountFields.forEach(input => {
+        input.addEventListener("input", calculateTotal);
+    });
+
+    function calculateTotal() {
+        let total = 0;
+
+        amountFields.forEach(field => {
+            total += parseFloat(field.value) || 0;
+        });
+
+        totalInput.value = total.toFixed(2);
+    }
+
+});
+</script>
+
+
+
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+
+    const gstType = document.querySelector('select[name="gst_type"]');
+    const gstLabel = document.getElementById("gst_label_cell");
+    const gstInputCell = document.getElementById("gst_input_cell");
+    const gstInput = document.getElementById("gst_number");
+
+    gstType.addEventListener("change", function() {
+
+        // Check against the exact Doctype values
+        if (this.value === "Not Applicable") {
+            gstLabel.style.display = "none";
+            gstInputCell.style.display = "none";
+            gstInput.value = "";
+            gstInput.removeAttribute("required");
+        } else if (this.value === "Individual" || this.value === "Company") {
+            gstLabel.style.display = "";
+            gstInputCell.style.display = "";
+            gstInput.setAttribute("required", "required");
+        }
+
+    });
+
+});
+</script>
+
+
+
+
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+
+    const zoneSelect = document.getElementById("zone");
+    const localitySelect = document.getElementById("locality");
+    const schemeSelect = document.getElementById("scheme");
+    const schemeIdInput = document.getElementById("scheme_id");
+    const localityIdInput = document.getElementById("locality_id");
+
+    if (!zoneSelect || !localitySelect || !schemeSelect) {
+        console.error("Required elements not found in DOM");
+        return;
+    }
+
+    // 1️⃣ Zone → Load Localities
+    zoneSelect.addEventListener("change", function() {
+
+        const zone = this.value;
+        localitySelect.innerHTML = '<option value="">Loading...</option>';
+        localityIdInput.value = "";
+
+        if (!zone) {
+            localitySelect.innerHTML = '<option value="">Select Locality</option>';
+            return;
+        }
+
+       fetch(`/api/method/dda_ifmis.www.dda_plots.get_localities?zone=${encodeURIComponent(zone)}`)
+
+        .then(res => res.json())
+        .then(data => {
+
+            localitySelect.innerHTML = '<option value="">Select Locality</option>';
+
+            (data.message || []).forEach(loc => {
+                const opt = document.createElement("option");
+                opt.value = loc.locality_name;
+                opt.textContent = loc.locality_name;
+                localitySelect.appendChild(opt);
+            });
+
+        });
+    });
+
+    // 2️⃣ Locality → Fill Locality ID
+    localitySelect.addEventListener("change", function() {
+
+        const locality = this.value;
+        localityIdInput.value = "";
+
+        if (!locality) return;
+
+   fetch(`/api/method/dda_ifmis.www.dda_plots.get_locality_id?locality_name=${encodeURIComponent(locality)}`)
+        .then(res => res.json())
+        .then(data => {
+            if (data.message) {
+                localityIdInput.value = data.message;
+            }
+        });
+    });
+
+    // 3️⃣ Scheme → Fill Scheme ID
+    schemeSelect.addEventListener("change", function() {
+        schemeIdInput.value = this.value || "";
+    });
+
+});
+</script>
+
+
+
+<script>
+let lastScroll = 0;
+const navbar = document.querySelector('.page-navbar');
+
+window.addEventListener('scroll', () => {
+    let curr = window.pageYOffset;
+    if (curr > lastScroll && curr > 80) {
+        navbar.classList.add('hide');
+    } else {
+        navbar.classList.remove('hide');
+    }
+    lastScroll = curr;
+});
+</script>
+
+
+
+
+
+</body>
+</html>
