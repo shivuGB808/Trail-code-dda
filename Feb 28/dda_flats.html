@@ -1077,74 +1077,47 @@ document.getElementById("findBtn").addEventListener("click", function () {
 
 
 <script>
-document.addEventListener("DOMContentLoaded", function () {
+document.getElementById("saveProceedBtn").addEventListener("click", function () {
 
-    const saveBtn = document.getElementById("saveProceedBtn");
+    let formData = {
+        scheme: document.getElementById("scheme").value,
+        zone: document.getElementById("zone").value,
+        locality: document.getElementById("locality").value,
+        name_of_the_allottee: document.getElementById("name_of_the_allottee").value,
+        mobile_number: document.getElementById("mobile_number").value,
+        total_amount: document.getElementById("total_amount").value
+    };
 
-    if (!saveBtn) return;
+    console.log("Sending Data:", formData);
 
-    saveBtn.addEventListener("click", function () {
+    fetch("/api/method/dda_ifmis.dda_receipts.doctype.challan.challan.create_challan", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData)
+    })
+    .then(response => response.json())
+    .then(data => {
 
-        const data = {
-            scheme: document.getElementById("scheme")?.value || "",
-            zone: document.getElementById("zone")?.value || "",
-            locality: document.getElementById("locality")?.value || "",
-            name_of_the_allottee: document.getElementById("name_of_the_allottee")?.value || "",
-            mobile_number: document.getElementById("mobile_number")?.value || "",
-            total_amount: document.getElementById("total_amount")?.value || "",
-            scheme_id: document.getElementById("scheme_id")?.value || "",
-            locality_id: document.getElementById("locality_id")?.value || "",
-            category_header: document.getElementById("category_header")?.value || "",
-            locality_header: document.getElementById("locality_header")?.value || "",
-            sequence_no: document.getElementById("sequence_no")?.value || "",
-            year: document.getElementById("year")?.value || "",
-            email_id: document.getElementById("email_id")?.value || "",
-            pan_number: document.getElementById("pan_number")?.value || "",
-            block: document.getElementById("block")?.value || "",
-            pocket: document.getElementById("pocket")?.value || "",
-            flatplotunit_no: document.getElementById("flatplotunit_no")?.value || "",
-            floor: document.getElementById("floor")?.value || "",
-            area_sq_mtr: document.getElementById("area_sq_mtr")?.value || "",
-            address_line_1: document.getElementById("address_line_1")?.value || "",
-            address_line_2: document.getElementById("address_line_2")?.value || "",
-            address_line_3: document.getElementById("address_line_3")?.value || "",
-            pincode: document.getElementById("pincode")?.value || "",
-            mode_of_payment: document.querySelector('input[name="mode_of_payment"]:checked')?.value || "",
-            bank_name: document.getElementById("bank_name")?.value || "",
-            ifsc_code: document.getElementById("ifsc_code")?.value || ""
-        };
+        console.log("Server Response:", data);
 
-        console.log("Sending Data:", data);
+        if (data.message && data.message.status === "success") {
 
-        fetch("/api/method/dda_ifmis.dda_receipts.doctype.challan.challan.create_challan", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(data)
-        })
-        .then(res => res.json())
-       .then(response => {
+            const challan_name = data.message.name;
 
-    console.log("Server Response:", response);
+            // 🔥 Redirect to makepayment page
+            window.location.href =
+                `/makepayment?doctype=Challan&docname=${challan_name}`;
 
-    if (response.message && response.message.status === "success") {
+        } else {
+            alert("Error creating challan");
+        }
 
-        const challan_name = response.message.name;
-
-        // 🔥 Redirect to existing payment page
-        window.location.href =
-            `/makepayment?doctype=Challan&docname=${challan_name}`;
-
-    } else {
-        alert(response.message?.message || "Error creating challan");
-    }
-
-})
-        .catch(error => {
-            console.error("Error:", error);
-        });
-
+    })
+    .catch(error => {
+        console.error("Error:", error);
+        alert("Server Error");
     });
 
 });
